@@ -31,7 +31,6 @@ def configuration(parent_package='', top_path=None):
     config.add_subpackage('metrics/tests')
 
     config.add_subpackage("ensemble")
-    config.add_subpackage("decisiontree")
 
     # some libs needs cblas, fortran-compiled BLAS will not be sufficient
     blas_info = get_info('blas_opt', 0)
