@@ -4,12 +4,12 @@ import numpy as np
 
 class Bagged(BaseEnsemble):
 
-    def fit(self, X, Y, sample_weight=[],
+    def fit(self, X, y, sample_weight=[],
                         sample_fraction=.5, baggs=10, **params):
         """
         X: list of instance vectors
-        Y: target values/classes
-        sample_fraction: fraction of X and Y randomly sampled
+        y: target values/classes
+        sample_fraction: fraction of X and y randomly sampled
         baggs: number of sampling/training iterations
         """
         if not 0 < sample_fraction < 1:
@@ -26,12 +26,10 @@ class Bagged(BaseEnsemble):
         # remove any previous ensemble
         self[:] = []
         for bagg in xrange(baggs):
-            # weight a random subsample with 0
-            random_sample_weight = sample_weight * \
-                (np.random.random_sample(sample_weight.shape[0]) \
-                    < sample_fraction)
             estimator = self.estimator(**self.params)
-            estimator.fit(X, Y, random_sample_weight, **params)
+            subsample = np.random.random_sample(sample_weight.shape[0]) \
+                        < sample_fraction
+            estimator.fit(X[subsample], y[subsample], sample_weight[subsample], **params)
             self.append(estimator)
         return self
 

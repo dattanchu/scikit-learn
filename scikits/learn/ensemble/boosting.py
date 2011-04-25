@@ -5,11 +5,11 @@ import math
 
 class AdaBoost(BaseEnsemble):
 
-    def fit(self, X, Y, sample_weight=[], boosts=1, beta=0.5, **params):
+    def fit(self, X, y, sample_weight=[], boosts=1, beta=0.5, **params):
         """
         X: list of instance vectors
-        Y: target values/classes
-        sample_weight: sample (X) weights
+        y: target values/classes
+        sample_weight: sample weights
 
         Notes: currently only binary classification is supported
         I am making the assumption that one class label is
@@ -31,13 +31,13 @@ class AdaBoost(BaseEnsemble):
         self[:] = []
         for i, boost in enumerate(xrange(boosts + 1)):
             estimator = self.estimator(**self.params)
-            estimator.fit(X, Y, sample_weight, **params)
+            estimator.fit(X, y, sample_weight, **params)
             # TODO request that classifiers return classification
             # of training sets when fitting
             # which would make the following line unnecessary
             T = estimator.predict(X)
             # instances incorrectly classified
-            incorrect = ((T * Y) < 0).astype(np.int32)
+            incorrect = ((T * y) < 0).astype(np.int32)
             # error fraction
             err = np.sum(sample_weight * incorrect) / np.sum(sample_weight)
             # sanity check
