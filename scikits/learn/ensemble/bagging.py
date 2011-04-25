@@ -28,8 +28,9 @@ class Bagged(BaseEnsemble):
         for bagg in xrange(baggs):
             estimator = self.estimator(**self.params)
             subsample = np.random.random_sample(sample_weight.shape[0]) \
-                        < sample_fraction
-            estimator.fit(X[subsample], y[subsample], sample_weight[subsample], **params)
+                < sample_fraction
+            estimator.fit(X[subsample], y[subsample],
+                sample_weight[subsample], **params)
             self.append(estimator)
         return self
 

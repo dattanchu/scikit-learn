@@ -2,6 +2,8 @@ from ..base import BaseEstimator
 """
 Base class for all ensemble classes
 """
+
+
 class BaseEnsemble(BaseEstimator):
 
     def __init__(self, estimator, **params):
@@ -27,7 +29,7 @@ class BaseEnsemble(BaseEstimator):
     def __delitem__(self, index):
 
         del self.estimators[index]
-    
+
     def append(self, thing):
 
         return self.estimators.append(thing)
