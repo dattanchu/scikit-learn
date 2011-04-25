@@ -14,6 +14,10 @@ class BaseEnsemble(BaseEstimator):
         self.params = params
         self.estimators = []
 
+    def __nonzero__(self):
+
+        return len(self) > 0
+    
     def __len__(self):
 
         return len(self.estimators)
@@ -33,3 +37,23 @@ class BaseEnsemble(BaseEstimator):
     def append(self, thing):
 
         return self.estimators.append(thing)
+
+    def __getattr__(self, name):
+        
+        try:
+            return super(BaseEnsemble, self).__getattr__(self, name)
+        except AttributeError: pass
+        if not self:
+            raise AttributeError("%s has no attribute %s"% \
+                (self.estimator.__name__, name))
+        def func(self, *args, **kwargs):
+            norm = 0.
+            _return = None
+            for weight, estimator in self:
+                norm += weight
+                if _return is None:
+                    _return = weight * estimator.__getattr__(name)(*args, **kwargs)
+                else:
+                    _return += weight * estimator.__getattr__(name)(*args, **kwargs)
+            return _return / norm if norm > 0 else None
+        return func
